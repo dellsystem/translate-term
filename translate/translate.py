@@ -101,19 +101,19 @@ def translate_word(dictionary, word):
                 with the first two letters being the acronym of the original
                 language, and the last two letters, the acronym of the language
                 you would like to translate to.''')
-    if not isinstance(word, str):
-        raise TypeError('The "word" argument must be a string (type {} passed)'.format(type(word)))
+    if not isinstance(word, basestring):
+        raise TypeError('The "word" argument must be a basestring (type {} passed)'.format(type(word)))
 
     # Building the url (and formatting it) and get the html from GET
     base_url = 'http://www.wordreference.com/'
     url = base_url + dictionary + '/' + word.replace(' ', '%20')
 
-    logging.info('Requesting {} for parsing'.format(url))
+    logging.info(u'Requesting {} for parsing'.format(url))
     r = requests.get(url)
     if r.status_code != 200:
         logging.info('Request failed with status {}'.format(r.status_code))
         return -1
-    logging.info('Request for {} successful'.format(url))
+    logging.info(u'Request for {} successful'.format(url))
 
     # Parsing the html to extract the data
     # I kept it to what matters:
