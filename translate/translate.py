@@ -122,16 +122,22 @@ def translate_word(dictionary, word):
     # Because who really cares if it is an intransitive verb or a noun?
     logging.info('Attempting to parse the html and extract the translations')
     soup = BeautifulSoup(r.content, 'html.parser')
-    table_single_form = soup.find_all('table', {'class': 'WRD'})[0]
+    table = soup.find_all('table', {'class': 'WRD'})
+    if table:
+        table_single_form = table[0]
+    else:
+        return []
+
     try:
         data_single_form = parse_translation_table(table_single_form)
     except IndexError:
         logging.warning('The word passed doesn\'t have any translation')
-        return -1
+        return []
 
     logging.info('Translations extracted')
     # print the results in a pretty way
-    print_results(word, data_single_form)
+    #print_results(word, data_single_form)
+    return data_single_form
 
 
 def parse_translation_table(table):
@@ -140,7 +146,7 @@ def parse_translation_table(table):
     a list of lists containing the various translations.
     '''
 
-    data = [ ['Original Language', 'Translation'] ]
+    data = []
 
     rows = table.find_all('tr')
     for row in rows:
